@@ -1,0 +1,4 @@
+github.com/jbarone/mobiledoc v0.0.0-20190115024259-bc6afa8b0ad1 h1:IqL4EVbJHp/MfRwFZPi0eCvuBB3cLKtaJBqPVvCi59U=
+github.com/jbarone/mobiledoc v0.0.0-20190115024259-bc6afa8b0ad1/go.mod h1:IBFgNTglY1dVCFb/XD93N0U69Kdu24LgLqasZhE++mw=
+github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
+github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
