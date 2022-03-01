@@ -78,6 +78,11 @@ func convert(r io.Reader, w io.Writer, useFigure bool) error {
 		return m["markdown"].(string)
 	})
 
+	mdoc.WithCard("html", func(payload interface{}) string {
+		m := payload.(map[string]interface{})
+		return m["html"].(string)
+	})
+
 	if doc.Title != "" {
 		if _, err := io.WriteString(w, "# "+doc.Title+"\n\n"); err != nil {
 			return fmt.Errorf("cannot write to output: %v", err)
