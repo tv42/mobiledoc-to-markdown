@@ -1,4 +1,2 @@
-github.com/jbarone/mobiledoc v0.0.0-20200429004548-692c62901bfe h1:UI9vldhhkXcAKhrqb9UvH1i/osXksOjq9Zn0SGbsQaw=
-github.com/jbarone/mobiledoc v0.0.0-20200429004548-692c62901bfe/go.mod h1:6GCrZv/oPlH/Sp17KLt+jXZ8aa7/xn7Vwoi9FPD5U/k=
-github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
-github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/jbarone/mobiledoc v0.0.0-20200515144922-93522d8fc49a h1:qF56prOnnw5XnxQeLy8wP0cMsz9s8aaSXUPtF5Vea/A=
+github.com/jbarone/mobiledoc v0.0.0-20200515144922-93522d8fc49a/go.mod h1:TR1QCzjrnJaIFzdZoquwKKZIvQPj6z5g87PoNo0wAks=
