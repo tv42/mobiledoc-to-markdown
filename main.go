@@ -73,6 +73,30 @@ func convert(r io.Reader, w io.Writer, useFigure bool) error {
 		}
 	})
 
+	mdoc.WithCard("gallery", func(payload interface{}) string {
+		var result strings.Builder
+		data := payload.(map[string]interface{})
+		images := data["images"].([]interface{})
+		for _, imageData := range images {
+			// The keys are: fileName row width height src.
+			// Of these, fileName seems unnecessary, src covers that.
+			// We're ignoring the layout clues from row width heigh, at least for now.
+			image := imageData.(map[string]interface{})
+			src := image["src"].(string)
+			if useFigure {
+				buf, err := renderImage(src, "")
+				if err != nil {
+					panic(fmt.Errorf("renderImage: %v", err))
+				}
+				result.Write(buf)
+			} else {
+				// TODO hope for the best on escaping
+				fmt.Fprintf(&result, "![%s](%s)\n", "", src)
+			}
+		}
+		return result.String()
+	})
+
 	mdoc.WithCard("markdown", func(payload interface{}) string {
 		m := payload.(map[string]interface{})
 		return m["markdown"].(string)
