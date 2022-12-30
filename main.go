@@ -49,63 +49,59 @@ func convert(r io.Reader, w io.Writer, useFigure bool) error {
 		return fmt.Errorf("error decoding input JSON: %v", err)
 	}
 
-	mdoc := mobiledoc.NewMobiledoc(strings.NewReader(doc.Mobiledoc))
-
-	mdoc.WithCard("image", func(payload interface{}) string {
-		// TODO this is an insane API. No errors, forcing
-		// map[string]interface{} on us. Plus, shouldn't this code reside
-		// in the library? Images are pretty standard.
-		data := payload.(map[string]interface{})
-		src := data["src"].(string)
-		caption, ok := data["caption"]
-		if !ok {
-			caption = ""
-		}
-		if useFigure {
-			buf, err := renderImage(src, caption.(string))
-			if err != nil {
-				panic(fmt.Errorf("renderImage: %v", err))
+	mdoc := mobiledoc.NewMobiledoc(strings.NewReader(doc.Mobiledoc)).
+		WithCard("image", func(payload interface{}) string {
+			// TODO this is an insane API. No errors, forcing
+			// map[string]interface{} on us. Plus, shouldn't this code reside
+			// in the library? Images are pretty standard.
+			data := payload.(map[string]interface{})
+			src := data["src"].(string)
+			caption, ok := data["caption"]
+			if !ok {
+				caption = ""
 			}
-			return string(buf)
-		} else {
-			// TODO hope for the best on escaping
-			return fmt.Sprintf("![%s](%s)\n", caption, src)
-		}
-	})
-
-	mdoc.WithCard("gallery", func(payload interface{}) string {
-		var result strings.Builder
-		data := payload.(map[string]interface{})
-		images := data["images"].([]interface{})
-		for _, imageData := range images {
-			// The keys are: fileName row width height src.
-			// Of these, fileName seems unnecessary, src covers that.
-			// We're ignoring the layout clues from row width heigh, at least for now.
-			image := imageData.(map[string]interface{})
-			src := image["src"].(string)
 			if useFigure {
-				buf, err := renderImage(src, "")
+				buf, err := renderImage(src, caption.(string))
 				if err != nil {
 					panic(fmt.Errorf("renderImage: %v", err))
 				}
-				result.Write(buf)
+				return string(buf)
 			} else {
 				// TODO hope for the best on escaping
-				fmt.Fprintf(&result, "![%s](%s)\n", "", src)
+				return fmt.Sprintf("![%s](%s)\n", caption, src)
 			}
-		}
-		return result.String()
-	})
-
-	mdoc.WithCard("markdown", func(payload interface{}) string {
-		m := payload.(map[string]interface{})
-		return m["markdown"].(string)
-	})
-
-	mdoc.WithCard("html", func(payload interface{}) string {
-		m := payload.(map[string]interface{})
-		return m["html"].(string)
-	})
+		}).
+		WithCard("gallery", func(payload interface{}) string {
+			var result strings.Builder
+			data := payload.(map[string]interface{})
+			images := data["images"].([]interface{})
+			for _, imageData := range images {
+				// The keys are: fileName row width height src.
+				// Of these, fileName seems unnecessary, src covers that.
+				// We're ignoring the layout clues from row width heigh, at least for now.
+				image := imageData.(map[string]interface{})
+				src := image["src"].(string)
+				if useFigure {
+					buf, err := renderImage(src, "")
+					if err != nil {
+						panic(fmt.Errorf("renderImage: %v", err))
+					}
+					result.Write(buf)
+				} else {
+					// TODO hope for the best on escaping
+					fmt.Fprintf(&result, "![%s](%s)\n", "", src)
+				}
+			}
+			return result.String()
+		}).
+		WithCard("markdown", func(payload interface{}) string {
+			m := payload.(map[string]interface{})
+			return m["markdown"].(string)
+		}).
+		WithCard("html", func(payload interface{}) string {
+			m := payload.(map[string]interface{})
+			return m["html"].(string)
+		})
 
 	if doc.Title != "" {
 		if _, err := io.WriteString(w, "# "+doc.Title+"\n\n"); err != nil {
